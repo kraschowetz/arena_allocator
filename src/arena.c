@@ -28,7 +28,7 @@ Arena create_arena(size_t size) {
 
 	Arena self = (Arena) {
 		.size = size,
-		.mem = (u8*) malloc(size),
+		.mem = (uint8_t*) malloc(size),
 	};
 
 	self.ll_root = (Blob*) malloc(sizeof(Blob));
@@ -39,11 +39,11 @@ Arena create_arena(size_t size) {
 	};
 	size -= self.ll_root->size;
 	
-	u64 last_byte = self.ll_root->size;
+	size_t last_byte = self.ll_root->size;
 	Blob *last_blob = self.ll_root;
-	u64 nblobs = size % 8 == 0 ? size / 8 : size / 8 + 1;
+	size_t nblobs = size % 8 == 0 ? size / 8 : size / 8 + 1;
 	
-	for(u64 i = 0; i < nblobs; i++) {
+	for(size_t i = 0; i < nblobs; i++) {
 		Blob *b = (Blob*) malloc(sizeof(Blob));
 		*b = (Blob) {
 			.size = size - STD_BLOB_SIZE < size ? STD_BLOB_SIZE : size, // check for unsigned overflow
@@ -74,9 +74,9 @@ void *arena_alloc(Arena *self, size_t size) {
 
 
 	if(size > blob->size) {
-		u64 free_size = 0;
+		size_t free_size = 0;
 		Blob *of_blob = blob;
-		u32 free_list_size = 0;
+		uint32_t free_list_size = 0;
 
 		while(of_blob) {
 			free_size += of_blob->size;
@@ -104,7 +104,7 @@ void *arena_alloc(Arena *self, size_t size) {
 		blob->size = free_size;
 
 		Blob *free_blob = blob->next;
-		for(u32 i = 0; i < free_list_size; i++) {
+		for(uint32_t i = 0; i < free_list_size; i++) {
 			Blob * tmp = free_blob->next;
 			free(free_blob);
 			free_blob = tmp;
@@ -168,7 +168,7 @@ void delete_arena(Arena *self) {
 
 void dbg_arena(Arena* self) {
 	Blob *b = self->ll_root;
-	u32 i = 0;
+	uint32_t i = 0;
 	printf("state of arena @ %p:\n", self);
 	while(b) {
 		printf("blob %u:\n", i);
@@ -188,7 +188,7 @@ void dbg_blob(Arena *self, void *blob) {
 	
 	printf("state of blob @ %p:\n", blob);
 	printf("\traw bytes: ");
-	for(u32 i= 0; i < b->size; i++) {
+	for(uint32_t i= 0; i < b->size; i++) {
 		printf("%x", ((unsigned char*)(b->mem))[i]);
 	}
 	printf("\n");

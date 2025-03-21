@@ -1,15 +1,15 @@
 #ifndef ARENA_H
 #define ARENA_H
 
-#include "util/types.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include <inttypes.h>
 
 #define STD_BLOB_SIZE 8
 
 typedef enum ArenaErrorHandle_t {
-	ARENA_NO_ERR = 0,	// stops funtion execution, no aditional info provided
-	ARENA_THROW_WARNING,	// stops funtion execution, prints error cause
+	ARENA_NO_ERR = 0,	// stops function execution, no aditional info provided
+	ARENA_THROW_WARNING,	// stops function execution, prints error cause
 	ARENA_THROW_ERR		// stops program execution, prints error cause
 } ArenaErrorHandle;
 
@@ -42,7 +42,7 @@ typedef struct Blob_t {
 typedef struct Arena_t {
 	size_t size;
 	Blob *ll_root;
-	u8 *mem;
+	uint8_t *mem;
 } Arena;
 
 /*
